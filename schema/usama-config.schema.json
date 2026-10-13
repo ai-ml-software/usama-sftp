@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Usama SFTP connections",
+  "type": "object",
+  "required": ["version", "profiles"],
+  "properties": {
+    "version": { "const": 2 },
+    "defaultProfile": { "type": "string", "description": "ID of the default connection. The dropdown can switch the active connection." },
+    "profiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "protocol"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-zA-Z0-9_-]{1,80}$" },
+          "name": { "type": "string", "description": "Display name in the connection dropdown." },
+          "protocol": { "enum": ["sftp", "ftp", "ftps", "git"], "description": "Git uses an HTTPS repository and a separate editable local checkout." },
+          "host": { "type": "string", "description": "SFTP/FTP server address, without a URL scheme. GitHub is not an SFTP host." },
+          "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+          "username": { "type": "string" },
+          "auth": { "enum": ["agent", "key", "password"], "description": "agent uses your already loaded SSH key. key reads privateKeyPath. Enter passwords/passphrases in Add / Edit Servers, outside this file." },
+          "privateKeyPath": { "type": "string", "description": "Only needed with auth: key. Choose the private key, not its .pub file. Not required with auth: agent." },
+          "remotePath": { "type": "string", "pattern": "^/", "description": "Absolute folder on the SFTP/FTP server." },
+          "localPath": { "type": "string", "description": "Optional SFTP mirror or a separate Git checkout folder inside this workspace. Git Connect creates the checkout once." },
+          "uploadOnSave": { "type": "boolean", "default": false, "description": "Local file uploads to SFTP/FTP. Remote SFTP documents already save directly. Git documents save locally and require commit/push." },
+          "ignore": { "type": "array", "items": { "type": "string" } },
+          "hostFingerprint": { "type": "string", "description": "Pinned SHA256 SSH server fingerprint. Keep the value verified for your server." },
+          "implicitTls": { "type": "boolean" },
+          "caPath": { "type": "string" },
+          "repositoryUrl": { "type": "string", "pattern": "^https://", "description": "Git repository HTTPS URL without tokens or passwords. Git uses your existing credential manager." },
+          "branch": { "type": "string", "default": "main", "description": "Branch to clone initially. Reconnecting preserves your local branch and edits." }
+        },
+        "allOf": [
+          { "if": { "properties": { "protocol": { "const": "git" } } }, "then": { "required": ["repositoryUrl", "localPath"], "properties": { "uploadOnSave": { "const": false } } }, "else": { "required": ["host", "username", "remotePath"] } },
+          { "if": { "required": ["auth"], "properties": { "auth": { "const": "key" } } }, "then": { "required": ["privateKeyPath"] } }
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

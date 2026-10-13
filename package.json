@@ -1,0 +1,907 @@
+{
+  "name": "usama-sftp",
+  "displayName": "Usama SFTP",
+  "description": "Easy SFTP, FTP, FTPS and Git HTTPS connections, remote editing and separate local Git checkouts.",
+  "version": "2.1.0",
+  "publisher": "kosama685",
+  "author": "Usama",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ai-ml-software/usama-cv.git"
+  },
+  "license": "MIT",
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "ftp",
+    "sftp",
+    "sync",
+    "remote"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onFileSystem:usama-sftp-remote",
+    "workspaceContains:.vscode/usama-sftp.json",
+    "onView:usamaSftp.sidebar"
+  ],
+  "icon": "resources/icon.png",
+  "main": "./dist/extension",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "usamaSftp",
+          "title": "Usama SFTP",
+          "icon": "resources/usama-server.svg"
+        }
+      ],
+      "panel": [
+        {
+          "id": "usamaSftpPanel",
+          "title": "Usama Transfers",
+          "icon": "resources/usama-server.svg"
+        }
+      ]
+    },
+    "views": {
+      "usamaSftp": [
+        {
+          "id": "usamaSftp.sidebar",
+          "name": "Overview",
+          "type": "webview"
+        },
+        {
+          "id": "usamaSftp.servers",
+          "name": "SFTP / FTP Servers"
+        }
+      ],
+      "usamaSftpPanel": [
+        {
+          "id": "usamaSftp.queue",
+          "name": "Transfers",
+          "type": "webview"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "Usama SFTP",
+      "properties": {
+        "usamaSftp.offerImport": {
+          "type": "boolean",
+          "default": true,
+          "description": "Offer to import existing sftp.json or sftp-sync.json servers."
+        },
+        "usamaSftp.statusBar.show": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the active server and transfer count in the status bar."
+        },
+        "usamaSftp.transfers.reveal": {
+          "type": "string",
+          "enum": [
+            "never",
+            "always",
+            "onError"
+          ],
+          "default": "never",
+          "description": "When to reveal the Transfers panel."
+        },
+        "usamaSftp.uploadOnSave.showSuccess": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a short status message after uploading on save."
+        },
+        "usamaSftp.git.path": {
+          "type": "string",
+          "default": "git",
+          "description": "Git executable used for HTTPS repositories. Uses Git credential manager; passwords and tokens stay out of usama-sftp.json."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "usamaSftp.config",
+        "title": "Config",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.setProfile",
+        "title": "Set Profile",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.openConnectInTerminal",
+        "title": "Open SSH in Terminal",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.cancelAllTransfer",
+        "title": "Cancel All Transfers",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.upload.file",
+        "title": "Upload File",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.upload.changedFiles",
+        "title": "Upload Changed Files",
+        "category": "Usama SFTP",
+        "icon": {
+          "light": "resources/light/upload.svg",
+          "dark": "resources/dark/upload.svg"
+        }
+      },
+      {
+        "command": "usamaSftp.upload.activeFile",
+        "title": "Upload Active File",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.upload.folder",
+        "title": "Upload Folder",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.upload.activeFolder",
+        "title": "Upload Active Folder",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.upload.project",
+        "title": "Upload Project",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.forceUpload",
+        "title": "Force Upload",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.upload.file.to.allProfiles",
+        "title": "Upload File To All Profiles",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.upload.activeFile.to.allProfiles",
+        "title": "Upload Active File To All Profiles",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.upload.folder.to.allProfiles",
+        "title": "Upload Folder To All Profiles",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.upload.activeFolder.to.allProfiles",
+        "title": "Upload Active Folder To All Profiles",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.upload.project.to.allProfiles",
+        "title": "Upload Project To All Profiles",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.forceUpload.to.allProfiles",
+        "title": "Force Upload To All Profiles",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.download.file",
+        "title": "Download File",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.download.activeFile",
+        "title": "Download Active File",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.download.folder",
+        "title": "Download Folder",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.download.activeFolder",
+        "title": "Download Active Folder",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.download.project",
+        "title": "Download Project",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.forceDownload",
+        "title": "Force Download",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.sync.localToRemote",
+        "title": "Sync Local -> Remote",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.sync.remoteToLocal",
+        "title": "Sync Remote -> Local",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.sync.bothDirections",
+        "title": "Sync Both Directions",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.diff",
+        "title": "Diff with Remote",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.diff.activeFile",
+        "title": "Diff Active File with Remote",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.list",
+        "title": "List",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.listActiveFolder",
+        "title": "List Active Folder",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.listAll",
+        "title": "List All",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.delete.remote",
+        "title": "Delete",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.create.folder",
+        "title": "Create Folder",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.create.file",
+        "title": "Create File",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.revealInExplorer",
+        "title": "Reveal in Explorer",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.revealInRemoteExplorer",
+        "title": "Reveal in Remote Explorer",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.remoteExplorer.editInLocal",
+        "title": "Edit in Local",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.viewContent",
+        "title": "View Content",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.remoteExplorer.refresh",
+        "title": "Refresh",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        },
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.importConfig",
+        "title": "Import SFTP Configuration",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.renameRemote",
+        "title": "Rename Remote File or Folder",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.copyRemotePath",
+        "title": "Copy Remote Path",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.configure",
+        "title": "Add or Edit Servers",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.openConfigFile",
+        "title": "Open usama-sftp.json",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.switchTarget",
+        "title": "Switch Active Server",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.toggleUploadOnSave",
+        "title": "Toggle Upload on Save",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.upload",
+        "title": "Upload",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.download",
+        "title": "Download from Server",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.uploadTo",
+        "title": "Upload to Server\u00e2\u20ac\u00a6",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.sync",
+        "title": "Sync Folder with Server\u00e2\u20ac\u00a6",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.deployGit",
+        "title": "Deploy Changed Git Files\u00e2\u20ac\u00a6",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.openManager",
+        "title": "Open File Manager (Dual Pane)",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.showQueue",
+        "title": "Show Transfers",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.cancelAll",
+        "title": "Cancel All Transfers",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.retryFailed",
+        "title": "Retry Failed Transfers",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.clearFinished",
+        "title": "Clear Finished Transfers",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.disconnect",
+        "title": "Disconnect / Cancel Transfers",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.importLegacy",
+        "title": "Import Servers from sftp.json / sftp-sync.json",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.remote.open",
+        "title": "Open and Edit Remote File",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.remote.refresh",
+        "title": "Refresh Servers",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.remote.setActive",
+        "title": "Make Active Server",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.remote.copyPath",
+        "title": "Copy Remote Path",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.remote.revealLocal",
+        "title": "Reveal Local Copy in Explorer",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.remote.download",
+        "title": "Download",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.remote.diff",
+        "title": "Diff with Local",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.remote.newFile",
+        "title": "New File\u00e2\u20ac\u00a6",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.remote.newFolder",
+        "title": "New Folder\u00e2\u20ac\u00a6",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.remote.rename",
+        "title": "Rename\u00e2\u20ac\u00a6",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.remote.delete",
+        "title": "Delete on Server",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.remote.uploadHere",
+        "title": "Upload Files Here\u00e2\u20ac\u00a6",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.scpUpload",
+        "title": "Upload with Native SCP in Terminal",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.rsyncPreview",
+        "title": "Preview Native Rsync in Terminal",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.connect",
+        "title": "Connect Selected Server or Repository",
+        "category": "Usama SFTP"
+      },
+      {
+        "command": "usamaSftp.openCheckout",
+        "title": "Open Local Git Checkout",
+        "category": "Usama SFTP"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "usamaSftp.configure",
+          "when": "view == usamaSftp.servers",
+          "group": "navigation"
+        },
+        {
+          "command": "usamaSftp.remote.refresh",
+          "when": "view == usamaSftp.servers",
+          "group": "navigation"
+        },
+        {
+          "command": "usamaSftp.switchTarget",
+          "when": "view == usamaSftp.servers",
+          "group": "navigation"
+        },
+        {
+          "command": "usamaSftp.openManager",
+          "when": "view == usamaSftp.servers",
+          "group": "navigation"
+        },
+        {
+          "command": "usamaSftp.sync",
+          "when": "view == usamaSftp.servers",
+          "group": "navigation"
+        },
+        {
+          "command": "usamaSftp.cancelAll",
+          "when": "view == usamaSftp.queue",
+          "group": "navigation"
+        },
+        {
+          "command": "usamaSftp.retryFailed",
+          "when": "view == usamaSftp.queue",
+          "group": "navigation"
+        },
+        {
+          "command": "usamaSftp.clearFinished",
+          "when": "view == usamaSftp.queue",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "usamaSftp.remote.setActive",
+          "when": "view == usamaSftp.servers",
+          "group": "usama"
+        },
+        {
+          "command": "usamaSftp.remote.open",
+          "when": "view == usamaSftp.servers",
+          "group": "usama"
+        },
+        {
+          "command": "usamaSftp.remote.download",
+          "when": "view == usamaSftp.servers && viewItem != root",
+          "group": "usama"
+        },
+        {
+          "command": "usamaSftp.remote.diff",
+          "when": "view == usamaSftp.servers && viewItem != root",
+          "group": "usama"
+        },
+        {
+          "command": "usamaSftp.remote.uploadHere",
+          "when": "view == usamaSftp.servers",
+          "group": "usama"
+        },
+        {
+          "command": "usamaSftp.remote.newFile",
+          "when": "view == usamaSftp.servers",
+          "group": "usama"
+        },
+        {
+          "command": "usamaSftp.remote.newFolder",
+          "when": "view == usamaSftp.servers",
+          "group": "usama"
+        },
+        {
+          "command": "usamaSftp.remote.rename",
+          "when": "view == usamaSftp.servers && viewItem != root",
+          "group": "usama"
+        },
+        {
+          "command": "usamaSftp.remote.delete",
+          "when": "view == usamaSftp.servers && viewItem != root",
+          "group": "usama"
+        },
+        {
+          "command": "usamaSftp.remote.copyPath",
+          "when": "view == usamaSftp.servers",
+          "group": "usama"
+        },
+        {
+          "command": "usamaSftp.remote.revealLocal",
+          "when": "view == usamaSftp.servers && viewItem != root",
+          "group": "usama"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "usamaSftp.upload",
+          "when": "resourceScheme == file",
+          "group": "usamaSftp"
+        },
+        {
+          "command": "usamaSftp.download",
+          "when": "resourceScheme == file",
+          "group": "usamaSftp"
+        },
+        {
+          "command": "usamaSftp.uploadTo",
+          "when": "resourceScheme == file",
+          "group": "usamaSftp"
+        },
+        {
+          "command": "usamaSftp.diff",
+          "when": "resourceScheme == file",
+          "group": "usamaSftp"
+        },
+        {
+          "command": "usamaSftp.sync",
+          "when": "resourceScheme == file",
+          "group": "usamaSftp"
+        },
+        {
+          "command": "usamaSftp.openManager",
+          "when": "resourceScheme == file",
+          "group": "usamaSftp"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "usamaSftp.upload",
+          "when": "resourceScheme == file",
+          "group": "usamaSftp"
+        },
+        {
+          "command": "usamaSftp.download",
+          "when": "resourceScheme == file",
+          "group": "usamaSftp"
+        },
+        {
+          "command": "usamaSftp.uploadTo",
+          "when": "resourceScheme == file",
+          "group": "usamaSftp"
+        },
+        {
+          "command": "usamaSftp.diff",
+          "when": "resourceScheme == file",
+          "group": "usamaSftp"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "usamaSftp.config",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.setProfile",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.cancelAllTransfer",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.upload.file",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.upload.changedFiles",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.upload.activeFile",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.upload.folder",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.upload.activeFolder",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.upload.project",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.forceUpload",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.upload.file.to.allProfiles",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.upload.activeFile.to.allProfiles",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.upload.folder.to.allProfiles",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.upload.activeFolder.to.allProfiles",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.upload.project.to.allProfiles",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.forceUpload.to.allProfiles",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.download.file",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.download.activeFile",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.download.folder",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.download.activeFolder",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.download.project",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.forceDownload",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.sync.localToRemote",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.sync.remoteToLocal",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.sync.bothDirections",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.diff.activeFile",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.list",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.listActiveFolder",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.listAll",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.delete.remote",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.create.folder",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.create.file",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.revealInExplorer",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.revealInRemoteExplorer",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.remoteExplorer.editInLocal",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.viewContent",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.remoteExplorer.refresh",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.importConfig",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.renameRemote",
+          "when": "false"
+        },
+        {
+          "command": "usamaSftp.copyRemotePath",
+          "when": "false"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "usamaSftp.upload",
+        "key": "ctrl+alt+u",
+        "when": "resourceScheme == file"
+      },
+      {
+        "command": "usamaSftp.download",
+        "key": "ctrl+alt+d",
+        "when": "resourceScheme == file"
+      }
+    ],
+    "jsonValidation": [
+      {
+        "fileMatch": "**/.vscode/usama-sftp.json",
+        "url": "./schema/usama-config.schema.json"
+      }
+    ],
+    "resourceLabelFormatters": [
+      {
+        "scheme": "usama-sftp-remote",
+        "formatting": {
+          "label": "${path}",
+          "separator": "/"
+        }
+      }
+    ],
+    "viewsWelcome": [
+      {
+        "view": "usamaSftp.servers",
+        "contents": "Manage your SFTP, FTP and FTPS servers.\n[Add a server](command:usamaSftp.config)\n[Import sftp.json](command:usamaSftp.importConfig)"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "webpack --mode production",
+    "dev": "webpack --mode development --watch",
+    "test": "jest",
+    "package": "vsce package --githubBranch usama-sftp --out releases/kosama685.usama-sftp-2.1.0.vsix",
+    "check": "tsc --noEmit",
+    "test:host": "node tools/run-host-tests.cjs"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.13",
+    "@types/jest": "^23.3.5",
+    "@types/lru-cache": "^4.1.1",
+    "@types/node": "^20.19.43",
+    "@types/vscode": "1.64.0",
+    "@types/webpack-env": "^1.18.8",
+    "@vscode/vsce": "^4.0.0",
+    "braces": ">=2.3.1",
+    "glob-parent": ">=5.1.2",
+    "jest": "^29.0.3",
+    "json-schema": ">=0.4.0",
+    "memfs": "^4.80.0",
+    "merge": ">=2.1.1",
+    "node-notifier": ">=8.0.1",
+    "playwright": "^1.63.0",
+    "rimraf": "^2.7.1",
+    "set-value": "^4.0.1",
+    "ts-loader": "^9.4.1",
+    "tslint": "^6.1.3",
+    "typescript": "^5.9.3",
+    "typescript-tslint-plugin": "^1.0.2",
+    "webpack": "^5.0.0",
+    "webpack-cli": "^4.7.0",
+    "yargs-parser": "^20.2.4",
+    "async": "^3.2.4",
+    "fs-extra": "^10.1.0",
+    "ftp": "^0.3.10",
+    "joi": "^10.6.0",
+    "lodash.debounce": "^4.0.8",
+    "lru-cache": "^4.1.3",
+    "p-queue": "2.4.2",
+    "ssh-config": "^1.1.3",
+    "tmp": "^0.2.5",
+    "upath": "^2.0.1"
+  },
+  "dependencies": {
+    "basic-ftp": "^6.2.2",
+    "ignore": "^5.1.4",
+    "ssh2": "^1.17.0"
+  },
+  "jest": {
+    "verbose": true,
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.ts$": "<rootDir>/test/preprocessor.js"
+    },
+    "testMatch": [
+      "<rootDir>/test/**/*.spec.js",
+      "<rootDir>/**/*/__tests__/*.ts"
+    ]
+  },
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false,
+      "description": "Remote file transfers require a trusted workspace."
+    }
+  }
+}

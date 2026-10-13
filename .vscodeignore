@@ -1,0 +1,17 @@
+*
+*/**
+**/.DS_Store
+!node_modules/**/*
+!dist/extension.js
+!dist/extension.js.LICENSE.txt
+!package.json
+!README.md
+!CHANGELOG.md
+!LICENSE
+!resources/**/*
+!schema/**/*
+!docs/UPSTREAM.md
+!docs/VALIDATION.md
+!docs/FEATURES.md
+!docs/GIT-REMOTE-CHECK.md
+!docs/LINGMA.md

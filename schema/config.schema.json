@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Usama SFTP Servers",
+  "type": "object",
+  "required": [
+    "version",
+    "profiles"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "const": 2
+    },
+    "defaultProfile": {
+      "type": "string"
+    },
+    "profiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "protocol",
+          "host",
+          "port",
+          "username",
+          "remotePath",
+          "localPath"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "host": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "privateKeyPath": {
+            "type": "string"
+          },
+          "remotePath": {
+            "type": "string"
+          },
+          "localPath": {
+            "type": "string"
+          },
+          "caPath": {
+            "type": "string"
+          },
+          "hostFingerprint": {
+            "type": "string"
+          },
+          "protocol": {
+            "enum": [
+              "sftp",
+              "ftp",
+              "ftps"
+            ]
+          },
+          "auth": {
+            "enum": [
+              "password",
+              "key",
+              "agent"
+            ]
+          },
+          "port": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 65535
+          },
+          "uploadOnSave": {
+            "type": "boolean",
+            "default": false
+          },
+          "implicitTls": {
+            "type": "boolean",
+            "default": false
+          },
+          "ignore": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

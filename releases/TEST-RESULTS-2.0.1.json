@@ -1,0 +1,45 @@
+{
+  "editor": "Lingma",
+  "extension": "usama.usama-sftp",
+  "version": "2.0.1",
+  "installedPath": "C:\\Users\\Lenovo\\.lingma\\extensions\\usama.usama-sftp-2.0.1",
+  "installedAcceptanceRun": "C:\\Users\\Lenovo\\CodeGeeXProjects\\usama-sftp\\.test-host\\run-1791409914745",
+  "unitTests": 88,
+  "unitSuites": 7,
+  "productionDependencyAudit": {
+    "knownVulnerabilities": 0
+  },
+  "passed": true,
+  "results": [
+    "Activation; all contributed commands registered",
+    "Saved altusgulf SSH profile: real server login via existing SSH agent, pinned host verification and remote-folder listing/stat passed; no remote files changed",
+    "Multi-server setup; credentials stored in SecretStorage and absent from JSON",
+    "SFTP: open, edit and save a server-only file; no local workspace copy created",
+    "SFTP: authenticated transfers, binary integrity, replacement, remote edit/save, stale-save protection, tree browse, Unicode/space names, create/rename/delete",
+    "FTP: open, edit and save a server-only file; no local workspace copy created",
+    "FTP: authenticated transfers, binary integrity, replacement, remote edit/save, stale-save protection, tree browse, Unicode/space names, create/rename/delete",
+    "FTPS: open, edit and save a server-only file; no local workspace copy created",
+    "FTPS: authenticated transfers, binary integrity, replacement, remote edit/save, stale-save protection, tree browse, Unicode/space names, create/rename/delete",
+    "IMPLICIT-FTPS: open, edit and save a server-only file; no local workspace copy created",
+    "IMPLICIT-FTPS: authenticated transfers, binary integrity, replacement, remote edit/save, stale-save protection, tree browse, Unicode/space names, create/rename/delete",
+    "SSH pinned-key mismatch and wrong password blocked; encrypted private-key authentication; untrusted FTPS certificate rejected",
+    "Real VS Code save event uploads only to active target; ignored files and path traversal blocked",
+    "Recursive folder transfers preserve empty folders and changed destination; cancelled live SFTP transfer preserves existing destination and cleans temp; actual failed authentication transfer retries",
+    "Installed Windows SCP transfers to pinned loopback host; missing Rsync reports actionable error",
+    "Sync preview is read-only; two-way baseline, conflicts, local resolution, deletion confirmation, stale-preview rejection and push mirror",
+    "Actual Git working-tree and ref previews; staged rename, addition and confirmed remote deletion; last-deploy marker",
+    "Transfer queue records failures, retries successfully and cancels running jobs",
+    "Legacy profiles imported; original file preserved; imported automation off; no plaintext secrets",
+    "Actual webview buttons: setup Test Connection / Save, dual-pane upload and refresh, sync preview / Apply; screenshots captured"
+  ],
+  "editorApiName": "Visual Studio Code",
+  "ideExecutable": "C:/Users/Lenovo/AppData/Local/Programs/Lingma/Lingma.exe",
+  "extensionRoot": "C:/Users/Lenovo/.lingma/extensions/usama.usama-sftp-2.0.1",
+  "gitRemote": {
+    "origin": "https://github.com/ai-ml-software/usama-cv.git",
+    "upstream": "https://github.com/Natizyskunk/vscode-sftp.git",
+    "readAccess": "passed",
+    "pushAccess": "unverified: HTTPS authentication unavailable",
+    "actualPushPerformed": false
+  }
+}

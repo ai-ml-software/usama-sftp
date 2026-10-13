@@ -1,0 +1,50 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Usama SFTP",
+      "type": "shell",
+      "command": "npm",
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "args": [
+        "run",
+        "compile"
+      ],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Test Usama SFTP",
+      "type": "shell",
+      "command": "npm",
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "args": [
+        "test",
+        "--",
+        "--runInBand"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Test local transfers",
+      "type": "shell",
+      "command": "npm",
+      "windows": {
+        "command": "npm.cmd"
+      },
+      "args": [
+        "run",
+        "test:host"
+      ],
+      "dependsOn": "Build Usama SFTP",
+      "problemMatcher": []
+    }
+  ]
+}
